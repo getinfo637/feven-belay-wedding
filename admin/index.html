@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="am">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RSVP Admin | Feven & Belay</title>
+<link rel="stylesheet" href="../styles.css">
+<style>
+body{min-height:100vh;background:#160a0d}.admin{max-width:1100px;margin:auto;padding:40px 20px}.admin-head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:30px}.admin h1{font:500 35px "Noto Serif Ethiopic"}.login,.panel{border:1px solid #d8b96b44;background:#1e0b10;padding:30px}.login{max-width:480px;margin:12vh auto}.login input{width:100%;padding:13px;background:#fff0;border:1px solid #d8b96b55;color:#fff;margin:8px 0 15px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}.stat{border:1px solid #d8b96b44;padding:20px}.stat strong{font:35px "Playfair Display";color:#d8b96b;display:block}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:13px;border-bottom:1px solid #d8b96b22;font-size:13px}th{color:#d8b96b}.badge{padding:5px 9px;border:1px solid #d8b96b44}@media(max-width:700px){.stats{grid-template-columns:1fr}.admin-head{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="admin">
+<div id="loginBox" class="login">
+<div class="brand">ፌ <span>♥</span> በ</div>
+<h1>RSVP Admin</h1>
+<p>የሠርጉ እንግዳ ምላሾች</p>
+<input id="email" type="email" placeholder="Admin email">
+<input id="password" type="password" placeholder="Password">
+<button id="loginBtn" class="gold-btn">ግባ</button>
+<p id="loginError"></p>
+</div>
+<div id="dashboard" class="hidden">
+<div class="admin-head"><div><div class="brand">ፌ ♥ በ</div><h1>RSVP Dashboard</h1></div><button id="logout" class="gold-btn">ውጣ</button></div>
+<div class="stats"><div class="stat"><span>Accepted</span><strong id="accepted">0</strong></div><div class="stat"><span>Declined</span><strong id="declined">0</strong></div><div class="stat"><span>Total RSVPs</span><strong id="total">0</strong></div></div>
+<div class="panel"><div class="table-wrap"><table><thead><tr><th>Guest</th><th>Status</th><th>Attending</th><th>Date / Time</th></tr></thead><tbody id="rows"></tbody></table></div></div>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script>
+const c=window.WEDDING_CONFIG||{};
+const sb=(c.supabaseUrl&&c.supabaseAnonKey)?supabase.createClient(c.supabaseUrl,c.supabaseAnonKey):null;
+const $=s=>document.querySelector(s);
+$("#loginBtn").onclick=async()=>{
+  if(!sb){$("#loginError").textContent="Add Supabase URL and anon key to config.js first.";return}
+  const {data,error}=await sb.auth.signInWithPassword({email:$("#email").value,password:$("#password").value});
+  if(error){$("#loginError").textContent=error.message;return}
+  showDashboard();
+};
+async function showDashboard(){
+  $("#loginBox").classList.add("hidden");$("#dashboard").classList.remove("hidden");
+  const {data,error}=await sb.from("rsvps").select("*").order("created_at",{ascending:false});
+  if(error){$("#rows").innerHTML="<tr><td colspan=4>"+error.message+"</td></tr>";return}
+  const accepted=data.filter(x=>x.attendance_status==="accepted").length;
+  const declined=data.filter(x=>x.attendance_status==="declined").length;
+  $("#accepted").textContent=accepted;$("#declined").textContent=declined;$("#total").textContent=data.length;
+  $("#rows").innerHTML=data.map(x=>`<tr><td>${escapeHtml(x.guest_name)}</td><td><span class="badge">${x.attendance_status}</span></td><td>${x.number_attending}</td><td>${new Date(x.created_at).toLocaleString()}</td></tr>`).join("");
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+$("#logout").onclick=async()=>{await sb.auth.signOut();location.reload()};
+(async()=>{if(sb){const {data}=await sb.auth.getSession();if(data.session)showDashboard()}})();
+</script>
+</body>
+</html>

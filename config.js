@@ -1,11 +1,7 @@
-/*
-  Wedding site configuration.
-  IMPORTANT: never put a Supabase SERVICE ROLE key here.
-  Only the public anon key belongs in a browser app.
-*/
+/* Public browser configuration. Never put a Supabase secret/service-role key here. */
 window.WEDDING_CONFIG = {
   weddingDateISO: "2027-05-23T18:00:00+03:00",
-  supabaseUrl: "",
-  supabaseAnonKey: "",
+  supabaseUrl: "https://nczgogyutwbepjrjtfjn.supabase.co",
+  supabaseAnonKey: "sb_publishable_jtLLJZoi6mpflbbSMgoZ0g_pRPIx-em",
   adminPath: "admin/"
 };

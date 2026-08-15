@@ -1,0 +1,15 @@
+UPLOAD THIS VERSION TO GITHUB
+
+1. Extract this ZIP.
+2. Upload the files/folders inside it to the ROOT of:
+   getinfo637/feven-belay-wedding
+3. Replace existing files when GitHub asks.
+4. Commit with:
+   Fix RSVP Supabase connection
+5. Wait for GitHub Pages to deploy.
+6. Open the site in Brave and test with a NEW name.
+
+Important:
+- Do not upload the ZIP itself.
+- Do not upload any Supabase secret/service-role key.
+- The publishable key in config.js is intended for browser use.

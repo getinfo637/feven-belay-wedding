@@ -100,7 +100,24 @@ async function submitToSupabase(name,status){
   if(!res.ok){
     let detail="";
     try{ detail=await res.text(); }catch(_){}
-    throw new Error(`SUPABASE_${res.status}: ${detail || res.statusText}`);
+
+    const errorMessage =
+        `SUPABASE_${res.status}: ${detail || res.statusText}`;
+
+    console.error("RSVP ERROR:", errorMessage);
+
+    const debugBox = document.createElement("div");
+    debugBox.style.cssText =
+        "position:fixed;left:12px;right:12px;bottom:12px;z-index:99999;" +
+        "background:#fff;color:#7b102b;padding:16px;border:2px solid #7b102b;" +
+        "border-radius:10px;font:14px Arial;word-break:break-word;";
+
+    debugBox.textContent = errorMessage;
+
+    document.body.appendChild(debugBox);
+
+    throw new Error(errorMessage);
+}
   }
 
   return {saved:true};

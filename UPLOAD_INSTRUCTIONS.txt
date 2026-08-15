@@ -1,15 +1,20 @@
-UPLOAD THIS VERSION TO GITHUB
+RSVP FIX V3 — IMPORTANT
 
-1. Extract this ZIP.
-2. Upload the files/folders inside it to the ROOT of:
-   getinfo637/feven-belay-wedding
-3. Replace existing files when GitHub asks.
-4. Commit with:
-   Fix RSVP Supabase connection
-5. Wait for GitHub Pages to deploy.
-6. Open the site in Brave and test with a NEW name.
+This version uses NEW JavaScript filenames (wedding-v3.js and wedding-config-v3.js)
+so an old browser cache cannot keep using the previous RSVP code.
 
-Important:
-- Do not upload the ZIP itself.
-- Do not upload any Supabase secret/service-role key.
-- The publishable key in config.js is intended for browser use.
+Upload the CONTENTS of this folder to the ROOT of:
+getinfo637/feven-belay-wedding
+
+Replace existing files when asked.
+
+Commit message:
+Fix RSVP with fresh script
+
+After GitHub Pages redeploys:
+1. Open the site in Brave.
+2. Hard refresh with Ctrl+Shift+R.
+3. Test with a NEW guest name.
+4. Check Supabase Table Editor > rsvps.
+
+Do not upload or expose any Supabase secret/service-role key.
